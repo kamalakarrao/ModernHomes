@@ -7,12 +7,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.ErrorCodes;
+import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -65,7 +68,35 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // RC_SIGN_IN is the request code you passed into startActivityForResult(...) when starting the sign in flow.
+        if (requestCode == RC_SIGN_IN) {
+            IdpResponse response = IdpResponse.fromResultIntent(data);
+
+            // Successfully signed in
+            if (resultCode == RESULT_OK) {
+               // startActivity(SignedInActivity.createIntent(this, response));
+                finish();
+            } else {
+                // Sign in failed
+                if (response == null) {
+                    // User pressed back button
+                   // showSnackbar(R.string.sign_in_cancelled);
+                    return;
+                }
+
+                if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
+                  //  showSnackbar(R.string.no_internet_connection);
+                    return;
+                }
+
+                //showSnackbar(R.string.unknown_error);
+              //  Log.e(TAG, "Sign-in error: ", response.getError());
+            }
+        }
+    }
+   /* @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -84,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
+*/
     @Override
     protected void onStop() {
         super.onStop();
@@ -120,12 +151,15 @@ public class MainActivity extends AppCompatActivity {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                Toast.makeText(MainActivity.this, "Inside FirebaseAuth", Toast.LENGTH_SHORT).show();
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     //Load LoginScreen
                     Toast.makeText(MainActivity.this, "Logged in", Toast.LENGTH_SHORT).show();
                 }else {
                     loadFirebaseLoginScreenUi();
+                    Toast.makeText(MainActivity.this, "Loading FirebaseAuth", Toast.LENGTH_SHORT).show();
+
                 }
 
                 }
