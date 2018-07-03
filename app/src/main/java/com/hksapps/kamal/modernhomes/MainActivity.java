@@ -15,6 +15,8 @@ import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private static final int RC_SIGN_IN = 123;
     private boolean signed_in_cancelled = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,12 +168,16 @@ public class MainActivity extends AppCompatActivity {
                    // finish();
                   // Intent i = new Intent(MainActivity.this,MainActivity.class);
                    //startActivity(i);
+                    DatabaseReference database =  FirebaseDatabase.getInstance().getReference();
+                   database.child("Users").child(user.getUid()).child("user_id").setValue(user.getUid());
+                   database.child("Users").child(user.getUid()).child("email_id").setValue(user.getEmail());
+
                     Toast.makeText(MainActivity.this, "Hello "+user.getDisplayName(), Toast.LENGTH_SHORT).show();
                 }else {
 
                       // loadFirebaseLoginScreenUi();
                     startActivity(new Intent(MainActivity.this,LoginActivity.class));
-                       Toast.makeText(MainActivity.this, "Loading FirebaseAuth", Toast.LENGTH_SHORT).show();
+                     //  Toast.makeText(MainActivity.this, "Loading FirebaseAuth", Toast.LENGTH_SHORT).show();
                     finish();
                 }
 

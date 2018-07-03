@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
 
             if(resultCode == RESULT_OK){
 
-                Toast.makeText(this, "Welcome", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(this, "Welcome", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, MainActivity.class));
                 finish();
 
