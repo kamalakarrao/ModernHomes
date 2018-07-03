@@ -40,8 +40,11 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Signing out", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+                AuthUI.getInstance()
+                        .signOut(MainActivity.this);
             }
         });
     }
@@ -68,6 +71,12 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    finish();
+    }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // RC_SIGN_IN is the request code you passed into startActivityForResult(...) when starting the sign in flow.
@@ -77,17 +86,20 @@ public class MainActivity extends AppCompatActivity {
             // Successfully signed in
             if (resultCode == RESULT_OK) {
                // startActivity(SignedInActivity.createIntent(this, response));
-                finish();
+               // finish();
             } else {
                 // Sign in failed
                 if (response == null) {
                     // User pressed back button
-                   // showSnackbar(R.string.sign_in_cancelled);
+                    finish();
+
+                    // showSnackbar(R.string.sign_in_cancelled);
                     return;
                 }
 
                 if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
                   //  showSnackbar(R.string.no_internet_connection);
+
                     return;
                 }
 
@@ -116,6 +128,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 */
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+
+    }
     @Override
     protected void onStop() {
         super.onStop();
@@ -151,12 +170,13 @@ public class MainActivity extends AppCompatActivity {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                Toast.makeText(MainActivity.this, "Inside FirebaseAuth", Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(MainActivity.this, "Inside FirebaseAuth", Toast.LENGTH_SHORT).show();
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     //Load LoginScreen
-                    Toast.makeText(MainActivity.this, "Logged in", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Hello "+user.getDisplayName(), Toast.LENGTH_SHORT).show();
                 }else {
+
                     loadFirebaseLoginScreenUi();
                     Toast.makeText(MainActivity.this, "Loading FirebaseAuth", Toast.LENGTH_SHORT).show();
 
