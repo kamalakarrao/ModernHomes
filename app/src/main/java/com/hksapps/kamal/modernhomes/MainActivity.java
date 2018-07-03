@@ -25,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private static final int RC_SIGN_IN = 1;
-
+    private static final int RC_SIGN_IN = 123;
+    private boolean signed_in_cancelled = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,12 +122,21 @@ public class MainActivity extends AppCompatActivity {
 
 
             }else if(resultCode == RESULT_CANCELED) {
-
                 Toast.makeText(this, "Sign in Cancelled", Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
     }
+
+  /*  @Override
+    public void onBackPressed() {
+
+        Toast.makeText(this, "Exiting", Toast.LENGTH_SHORT).show();
+        finish();
+        System.exit(0);
+        super.onBackPressed();
+
+    }*/
 
     @Override
     protected void onStart() {
@@ -155,6 +164,8 @@ public class MainActivity extends AppCompatActivity {
                                 new AuthUI.IdpConfig.EmailBuilder().build()))
                         .build(),
                 RC_SIGN_IN);
+
+
     }
 
 
@@ -174,11 +185,14 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     //Load LoginScreen
+                   // finish();
+                  // Intent i = new Intent(MainActivity.this,MainActivity.class);
+                   //startActivity(i);
                     Toast.makeText(MainActivity.this, "Hello "+user.getDisplayName(), Toast.LENGTH_SHORT).show();
                 }else {
 
-                    loadFirebaseLoginScreenUi();
-                    Toast.makeText(MainActivity.this, "Loading FirebaseAuth", Toast.LENGTH_SHORT).show();
+                       loadFirebaseLoginScreenUi();
+                       Toast.makeText(MainActivity.this, "Loading FirebaseAuth", Toast.LENGTH_SHORT).show();
 
                 }
 
