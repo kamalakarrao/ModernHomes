@@ -7,19 +7,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.ErrorCodes;
-import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -109,24 +104,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
- */   @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == RC_SIGN_IN){
-
-            if(resultCode == RESULT_OK){
-
-                Toast.makeText(this, "Welcome", Toast.LENGTH_SHORT).show();
-
-
-
-            }else if(resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, "Sign in Cancelled", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }
-    }
+ */
 
   /*  @Override
     public void onBackPressed() {
@@ -137,6 +115,20 @@ public class MainActivity extends AppCompatActivity {
         super.onBackPressed();
 
     }*/
+/*  @Override
+  protected void onResume() {
+      super.onResume();
+      mAuth.addAuthStateListener(mAuthListener);
+  }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }*/
+
 
     @Override
     protected void onStart() {
@@ -151,21 +143,6 @@ public class MainActivity extends AppCompatActivity {
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
-    }
-    private void loadFirebaseLoginScreenUi(){
-
-        startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setIsSmartLockEnabled(false)
-                        .setTheme(R.style.LoginTheme)
-                        .setAvailableProviders(Arrays.asList(
-                                new AuthUI.IdpConfig.GoogleBuilder().build(),
-                                new AuthUI.IdpConfig.EmailBuilder().build()))
-                        .build(),
-                RC_SIGN_IN);
-
-
     }
 
 
@@ -191,9 +168,10 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Hello "+user.getDisplayName(), Toast.LENGTH_SHORT).show();
                 }else {
 
-                       loadFirebaseLoginScreenUi();
+                      // loadFirebaseLoginScreenUi();
+                    startActivity(new Intent(MainActivity.this,LoginActivity.class));
                        Toast.makeText(MainActivity.this, "Loading FirebaseAuth", Toast.LENGTH_SHORT).show();
-
+                    finish();
                 }
 
                 }
