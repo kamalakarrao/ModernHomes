@@ -71,13 +71,9 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    finish();
-    }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+ /*   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // RC_SIGN_IN is the request code you passed into startActivityForResult(...) when starting the sign in flow.
         if (requestCode == RC_SIGN_IN) {
@@ -87,11 +83,16 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                // startActivity(SignedInActivity.createIntent(this, response));
                // finish();
-            } else {
+                Toast.makeText(this, "Signed In", Toast.LENGTH_SHORT).show();
+            }
+
+
+            else {
                 // Sign in failed
+            //    Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show();
+
                 if (response == null) {
                     // User pressed back button
-                    finish();
 
                     // showSnackbar(R.string.sign_in_cancelled);
                     return;
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-   /* @Override
+ */   @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -127,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-*/
 
     @Override
     protected void onStart() {
