@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 
-    public class RoomHolder extends RecyclerView.ViewHolder {
+    public class RoomHolder extends    RecyclerView.ViewHolder {
         public TextView room_id, room_name, genre;
 
         public RoomHolder(View view) {

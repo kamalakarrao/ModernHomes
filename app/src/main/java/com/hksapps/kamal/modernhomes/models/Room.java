@@ -3,6 +3,9 @@ package com.hksapps.kamal.modernhomes.models;
 public class Room {
     String room_id;
     String room_name;
+    public Room(){
+
+    }
 
     public Room(String room_id, String room_name) {
         this.room_id = room_id;

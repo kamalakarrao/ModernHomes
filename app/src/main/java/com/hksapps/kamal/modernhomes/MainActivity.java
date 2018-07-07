@@ -23,16 +23,10 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.hksapps.kamal.modernhomes.models.Room;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
     private boolean signed_in_cancelled = false;
     private RecyclerView RoomRecyclerView;
+    FirebaseRecyclerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,37 +61,38 @@ public class MainActivity extends AppCompatActivity {
                     .child("Users").child(FirebaseAuth.getInstance().getUid()).child("rooms").orderByKey()
                     .limitToLast(50);
             Log.e("data", String.valueOf(query));
-            query.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    Log.e("dagta",dataSnapshot.getKey()+"  "+dataSnapshot.getValue());
-                    try {
-                        JSONObject jsonObject = new JSONObject(dataSnapshot.getValue().toString());
-                         new Room(jsonObject.getString("room_id"),jsonObject.getString("room_name"));;
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
+//            query.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                    Log.e("dagta",dataSnapshot.getKey()+"  "+dataSnapshot.getValue());
+//                    try {
+//                        JSONObject jsonObject = new JSONObject(dataSnapshot.getValue().toString());
+//                         new Room(jsonObject.getString("room_id"),jsonObject.getString("room_name"));;
+//
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                }
+//            });
 
             FirebaseRecyclerOptions<Room> options =
                     new FirebaseRecyclerOptions.Builder<Room>()
                             .setQuery(query, Room.class)
                             .build();
 
-            FirebaseRecyclerAdapter adapter = new FirebaseRecyclerAdapter<Room, RoomHolder>(options) {
+             adapter = new FirebaseRecyclerAdapter<Room, RoomHolder>(options) {
                 @Override
                 public RoomHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                     // Create a new instance of the ViewHolder, in this case we are using a custom
                     // layout called R.layout.message for each item
                     View view = LayoutInflater.from(parent.getContext())
                             .inflate(R.layout.recycler_ui, parent, false);
+
                     Toast.makeText(MainActivity.this, "Arrived 444", Toast.LENGTH_SHORT).show();
 
                     return new RoomHolder(view);
@@ -104,15 +100,23 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 protected void onBindViewHolder(RoomHolder holder, int position, Room model) {
-                    Toast.makeText(MainActivity.this, "Arrived", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Arrived" +model.getRoom_id()+" "+model.getRoom_name(), Toast.LENGTH_SHORT).show();
                     holder.room_id.setText(model.getRoom_id());
                     holder.room_name.setText(model.getRoom_name());
+                    holder.room_id.setText("test");
+                    holder.room_name.setText("test");
+
                     // Bind the Chat object to the ChatHolder
                     // ...
                 }
-            };
 
+
+
+            };
             RoomRecyclerView.setAdapter(adapter);
+            adapter.startListening();
+
+            adapter.notifyDataSetChanged();
 
         }else {
             Toast.makeText(this, "No UUID", Toast.LENGTH_SHORT).show();
