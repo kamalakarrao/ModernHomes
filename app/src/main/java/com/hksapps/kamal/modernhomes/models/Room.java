@@ -3,14 +3,21 @@ package com.hksapps.kamal.modernhomes.models;
 public class Room {
     String room_id;
     String room_name;
+    String room_img;
+
+
+
+    public Room(String room_id, String room_name, String img_url) {
+        this.room_id = room_id;
+        this.room_name = room_name;
+        this.room_img = img_url;
+    }
+
     public Room(){
 
     }
 
-    public Room(String room_id, String room_name) {
-        this.room_id = room_id;
-        this.room_name = room_name;
-    }
+
 
     public String getRoom_id() {
         return room_id;
@@ -26,5 +33,13 @@ public class Room {
 
     public void setRoom_name(String room_name) {
         this.room_name = room_name;
+    }
+
+    public String getRoom_img() {
+        return room_img;
+    }
+
+    public void setRoom_img(String room_img) {
+        this.room_img = room_img;
     }
 }

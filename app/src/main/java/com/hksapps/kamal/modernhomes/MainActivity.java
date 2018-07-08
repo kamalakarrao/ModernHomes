@@ -6,8 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.hksapps.kamal.modernhomes.models.Room;
+import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
     private boolean signed_in_cancelled = false;
     private RecyclerView RoomRecyclerView;
-    FirebaseRecyclerAdapter adapter;
+    FirebaseRecyclerAdapter<Room, RoomHolder> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,18 +48,37 @@ public class MainActivity extends AppCompatActivity {
 
         RoomRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
 //        mAdapter = new MoviesAdapter(movieList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        RoomRecyclerView.hasFixedSize();
+        RoomRecyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         RoomRecyclerView.setLayoutManager(mLayoutManager);
-        RoomRecyclerView.setItemAnimator(new DefaultItemAnimator());
+       //n RoomRecyclerView.setItemAnimator(new DefaultItemAnimator());
 //        recyclerView.setAdapter(mAdapter);
+
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Signing out", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+
+                AuthUI.getInstance()
+                        .signOut(MainActivity.this);
+            }
+        });
+    }
+
+    private void LoadDataToRecyclerView(){
+
+
         if(FirebaseAuth.getInstance().getUid()!=null){
             Toast.makeText(this, "UUID Exist!", Toast.LENGTH_SHORT).show();
 
             Log.e("uuid",FirebaseAuth.getInstance().getUid());
             Query query = FirebaseDatabase.getInstance()
                     .getReference()
-                    .child("Users").child(FirebaseAuth.getInstance().getUid()).child("rooms").orderByKey()
-                    .limitToLast(50);
+                    .child("Users").child(FirebaseAuth.getInstance().getUid()).child("rooms");
             Log.e("data", String.valueOf(query));
 //            query.addValueEventListener(new ValueEventListener() {
 //                @Override
@@ -85,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                             .setQuery(query, Room.class)
                             .build();
 
-             adapter = new FirebaseRecyclerAdapter<Room, RoomHolder>(options) {
+            adapter = new FirebaseRecyclerAdapter<Room, RoomHolder>(options) {
                 @Override
                 public RoomHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                     // Create a new instance of the ViewHolder, in this case we are using a custom
@@ -103,8 +122,11 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Arrived" +model.getRoom_id()+" "+model.getRoom_name(), Toast.LENGTH_SHORT).show();
                     holder.room_id.setText(model.getRoom_id());
                     holder.room_name.setText(model.getRoom_name());
-                    holder.room_id.setText("test");
-                    holder.room_name.setText("test");
+
+                    Picasso.get().load(model.getRoom_img()).into(holder.room_img);
+
+
+
 
                     // Bind the Chat object to the ChatHolder
                     // ...
@@ -113,29 +135,16 @@ public class MainActivity extends AppCompatActivity {
 
 
             };
-            RoomRecyclerView.setAdapter(adapter);
             adapter.startListening();
+            RoomRecyclerView.setAdapter(adapter);
+            /*adapter.startListening();*/
 
-            adapter.notifyDataSetChanged();
+//            adapter.notifyDataSetChanged();
 
         }else {
             Toast.makeText(this, "No UUID", Toast.LENGTH_SHORT).show();
         }
-
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Signing out", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-
-                AuthUI.getInstance()
-                        .signOut(MainActivity.this);
-            }
-        });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -227,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
+        LoadDataToRecyclerView();
 
     }
     @Override
