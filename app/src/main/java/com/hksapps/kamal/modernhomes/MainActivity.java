@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -60,11 +59,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Signing out", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
 
-                AuthUI.getInstance()
-                        .signOut(MainActivity.this);
             }
         });
     }
@@ -112,18 +107,31 @@ public class MainActivity extends AppCompatActivity {
                     View view = LayoutInflater.from(parent.getContext())
                             .inflate(R.layout.recycler_ui, parent, false);
 
-                    Toast.makeText(MainActivity.this, "Arrived 444", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MainActivity.this, "Arrived 444", Toast.LENGTH_SHORT).show();
 
                     return new RoomHolder(view);
                 }
 
                 @Override
-                protected void onBindViewHolder(RoomHolder holder, int position, Room model) {
-                    Toast.makeText(MainActivity.this, "Arrived" +model.getRoom_id()+" "+model.getRoom_name(), Toast.LENGTH_SHORT).show();
-                    holder.room_id.setText(model.getRoom_id());
+                protected void onBindViewHolder(RoomHolder holder, int position, final Room model) {
+//                    Toast.makeText(MainActivity.this, "Arrived" +model.getRoom_id()+" "+model.getRoom_name(), Toast.LENGTH_SHORT).show();
+                    //holder.room_id.setText(model.getRoom_id());
                     holder.room_name.setText(model.getRoom_name());
 
                     Picasso.get().load(model.getRoom_img()).into(holder.room_img);
+
+//                    holder.room_layout.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            Toast.makeText(MainActivity.this, model.getRoom_id(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+                    holder.card_view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Toast.makeText(MainActivity.this, model.getRoom_id(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
 
 
@@ -161,7 +169,12 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.log_out) {
+
+
+
+            AuthUI.getInstance()
+                    .signOut(MainActivity.this);
             return true;
         }
 
