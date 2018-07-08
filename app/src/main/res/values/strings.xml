@@ -8,4 +8,5 @@
         <item>light</item>
         <item>tube</item>
     </string-array>
+    <string name="title_activity_switches_screen">SwitchesScreen</string>
 </resources>

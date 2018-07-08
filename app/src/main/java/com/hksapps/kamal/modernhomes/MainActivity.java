@@ -76,24 +76,6 @@ public class MainActivity extends AppCompatActivity {
                     .getReference()
                     .child("Users").child(FirebaseAuth.getInstance().getUid()).child("rooms");
             Log.e("data", String.valueOf(query));
-//            query.addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                    Log.e("dagta",dataSnapshot.getKey()+"  "+dataSnapshot.getValue());
-//                    try {
-//                        JSONObject jsonObject = new JSONObject(dataSnapshot.getValue().toString());
-//                         new Room(jsonObject.getString("room_id"),jsonObject.getString("room_name"));;
-//
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                }
-//            });
 
             FirebaseRecyclerOptions<Room> options =
                     new FirebaseRecyclerOptions.Builder<Room>()
@@ -120,17 +102,15 @@ public class MainActivity extends AppCompatActivity {
                     holder.room_name.setText(model.getRoom_name());
 
                     Picasso.get().load(model.getRoom_img()).into(holder.room_img);
-
-//                    holder.room_layout.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            Toast.makeText(MainActivity.this, model.getRoom_id(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
                     holder.card_view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             Toast.makeText(MainActivity.this, model.getRoom_id(), Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(MainActivity.this, SwitchesScreen.class);
+                            intent.putExtra("room_id", model.getRoom_id());
+                            startActivity(intent);
+
                         }
                     });
 
@@ -260,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
+        adapter.stopListening();
     }
 
 
