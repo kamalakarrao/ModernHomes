@@ -69,7 +69,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         if(FirebaseAuth.getInstance().getUid()!=null){
-            Toast.makeText(this, "UUID Exist!", Toast.LENGTH_SHORT).show();
+           //
+            // Toast.makeText(this, "UUID Exist!", Toast.LENGTH_SHORT).show();
 
             Log.e("uuid",FirebaseAuth.getInstance().getUid());
             Query query = FirebaseDatabase.getInstance()
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                     holder.card_view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Toast.makeText(MainActivity.this, model.getRoom_id(), Toast.LENGTH_SHORT).show();
+                          //  Toast.makeText(MainActivity.this, model.getRoom_id(), Toast.LENGTH_SHORT).show();
 
                             Intent intent = new Intent(MainActivity.this, SwitchesScreen.class);
                             intent.putExtra("room_id", model.getRoom_id());
@@ -267,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
                    database.child("Users").child(user.getUid()).child("user_id").setValue(user.getUid());
                    database.child("Users").child(user.getUid()).child("email_id").setValue(user.getEmail());
 
-                    Toast.makeText(MainActivity.this, "Hello "+user.getDisplayName(), Toast.LENGTH_SHORT).show();
+                  //  Toast.makeText(MainActivity.this, "Hello "+user.getDisplayName(), Toast.LENGTH_SHORT).show();
                 }else {
 
                       // loadFirebaseLoginScreenUi();
