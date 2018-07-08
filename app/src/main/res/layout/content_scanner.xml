@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+
+    tools:context=".ScannerActivity"
+    tools:showIn="@layout/activity_scanner">
+
+    <LinearLayout
+        android:id="@+id/ll_scannerlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#cbc9c9"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <SurfaceView
+            android:id="@+id/cameraprev"
+            android:layout_width="300dp"
+
+            android:layout_height="300dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_deviceactivation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/curevedrectangle"
+            android:orientation="vertical"
+            android:paddingLeft="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Device Found !"
+                android:textColor="#ffffff"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/hardware" />
+
+                <TextView
+                    android:id="@+id/tv_device_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ffffff"
+                    android:textSize="24dp"
+                    android:textStyle="bold"
+                    tools:text="sdfd5412" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:orientation="vertical">
+
+            <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+                android:id="@+id/android_material_design_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Room Type"
+                android:textColorHint="#05ab9a"
+                app:met_floatingLabel="normal" />
+
+
+    </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_margin="20dp"
+            android:text="okay"
+            android:id="@+id/btn_configure"
+            android:textColor="#ffffff"
+            android:background="@drawable/curevedrectangle"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>
+
+
