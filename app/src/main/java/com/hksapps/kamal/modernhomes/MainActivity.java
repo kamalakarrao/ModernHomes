@@ -1,9 +1,13 @@
 package com.hksapps.kamal.modernhomes;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -102,11 +106,30 @@ public class MainActivity extends AppCompatActivity {
                     //holder.room_id.setText(model.getRoom_id());
                     holder.room_name.setText(model.getRoom_name());
 
-                    Picasso.get().load(model.getRoom_img()).into(holder.room_img);
+
+                    if(model.getRoom_img().length()>5)
+                        Picasso.get().load(model.getRoom_img()).into(holder.room_img);
+                    else
+                        holder.room_img.setImageResource(R.drawable.light);
+
+                    holder.card_view.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            Vibrator vibrator = (Vibrator)getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrator.vibrate(100);
+                            AlertDialog diaBox = AskOption(model.getRoom_id());
+                            diaBox.show();
+
+                            return false;
+                        }
+                    });
+
                     holder.card_view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                           //  Toast.makeText(MainActivity.this, model.getRoom_id(), Toast.LENGTH_SHORT).show();
+
+
 
                             Intent intent = new Intent(MainActivity.this, SwitchesScreen.class);
                             intent.putExtra("room_id", model.getRoom_id());
@@ -246,6 +269,40 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    private AlertDialog AskOption(final String room_id)
+    {
+        AlertDialog myQuittingDialogBox =new AlertDialog.Builder(this)
+                //set message, title, and icon
+                .setTitle("Delete")
+                .setMessage("Do you want to Delete this room")
+                .setIcon(R.drawable.baseline_delete_black_24dp)
+
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        //your deleting code
+
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getUid()).child("rooms");
+                        ref.child(room_id).removeValue();
+
+                        dialog.dismiss();
+                    }
+
+                })
+
+
+
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+
+                    }
+                })
+                .create();
+        return myQuittingDialogBox;
+
+    }
 
 
 
