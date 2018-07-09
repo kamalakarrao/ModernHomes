@@ -3,9 +3,16 @@ package com.hksapps.kamal.modernhomes.models;
 public class Switch {
     String name;
     String status;
+    String switch_img;
 
 
-    public Switch(){
+    public Switch(String name, String status, String switch_img) {
+        this.name = name;
+        this.status = status;
+        this.switch_img = switch_img;
+    }
+
+    public Switch() {
     }
 
     public String getName() {
@@ -24,11 +31,14 @@ public class Switch {
         this.status = status;
     }
 
-    public Switch(String name, String status) {
-        this.name = name;
-        this.status = status;
+
+    public String getSwitch_img() {
+        return switch_img;
     }
 
+    public void setSwitch_img(String switch_img) {
+        this.switch_img = switch_img;
+    }
 
 
 }

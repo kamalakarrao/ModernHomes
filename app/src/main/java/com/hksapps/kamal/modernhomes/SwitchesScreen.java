@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.hksapps.kamal.modernhomes.models.Switch;
+import com.squareup.picasso.Picasso;
 
 public class SwitchesScreen extends AppCompatActivity {
 
@@ -45,7 +46,6 @@ public class SwitchesScreen extends AppCompatActivity {
         SwitchRecyclerView.setLayoutManager(mLayoutManager);
 
 
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,13 +57,13 @@ public class SwitchesScreen extends AppCompatActivity {
     }
 
 
-    private void LoadDataToRecyclerView(){
+    private void LoadDataToRecyclerView() {
 
 
-        if(FirebaseAuth.getInstance().getUid()!=null&&room_id!=null&&room_id.length()>0){
-           // Toast.makeText(this, "UUID Exist!", Toast.LENGTH_SHORT).show();
+        if (FirebaseAuth.getInstance().getUid() != null && room_id != null && room_id.length() > 0) {
+            // Toast.makeText(this, "UUID Exist!", Toast.LENGTH_SHORT).show();
 
-           ;
+            ;
             Query query = FirebaseDatabase.getInstance()
                     .getReference()
                     .child("Devices").child(room_id).child("switches");
@@ -92,23 +92,33 @@ public class SwitchesScreen extends AppCompatActivity {
 //                    Toast.makeText(MainActivity.this, "Arrived" +model.getRoom_id()+" "+model.getRoom_name(), Toast.LENGTH_SHORT).show();
                     //holder.room_id.setText(model.getRoom_id());
 
-                 holder.switch_name.setText(model.getName());
+                    holder.switch_name.setText(model.getName());
+                    try {
+                        if (model.getSwitch_img().length() > 0 && model.getSwitch_img() != null) {
 
-                 if(model.getStatus().equals("on")){
+                            Picasso.get().load(model.getSwitch_img()).into(holder.switch_img);
 
-                     holder.switch_status.setChecked(true);
-                 }else if (model.getStatus().equals("off")){
+                        }
+                    } catch (Exception e) {
 
-                     holder.switch_status.setChecked(false);
+                    }
 
-                 }
 
-                 holder.switch_card_view.setOnLongClickListener(new View.OnLongClickListener() {
-                     @Override
-                     public boolean onLongClick(View view) {
-                         return false;
-                     }
-                 });
+                    if (model.getStatus().equals("on")) {
+
+                        holder.switch_status.setChecked(true);
+                    } else if (model.getStatus().equals("off")) {
+
+                        holder.switch_status.setChecked(false);
+
+                    }
+
+                    holder.switch_card_view.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            return false;
+                        }
+                    });
 
 
                     holder.switch_card_view.setOnClickListener(new View.OnClickListener() {
@@ -117,13 +127,13 @@ public class SwitchesScreen extends AppCompatActivity {
 
                             DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Devices").child(room_id).child("switches");
 
-                            if(model.getStatus().equals("on")){
+                            if (model.getStatus().equals("on")) {
 
-                            ref.child("switch"+String.valueOf(position+1)).child("status").setValue("off");
+                                ref.child("switch" + String.valueOf(position + 1)).child("status").setValue("off");
 
-                            }else if (model.getStatus().equals("off")){
+                            } else if (model.getStatus().equals("off")) {
 
-                                ref.child("switch"+String.valueOf(position+1)).child("status").setValue("on");
+                                ref.child("switch" + String.valueOf(position + 1)).child("status").setValue("on");
                             }
                         }
                     });
@@ -134,7 +144,6 @@ public class SwitchesScreen extends AppCompatActivity {
                 }
 
 
-
             };
             adapter.startListening();
             SwitchRecyclerView.setAdapter(adapter);
@@ -142,7 +151,7 @@ public class SwitchesScreen extends AppCompatActivity {
 
 //            adapter.notifyDataSetChanged();
 
-        }else {
+        } else {
             Toast.makeText(this, "No Room Id", Toast.LENGTH_SHORT).show();
         }
     }
@@ -153,6 +162,7 @@ public class SwitchesScreen extends AppCompatActivity {
         LoadDataToRecyclerView();
 
     }
+
     @Override
     protected void onStop() {
         super.onStop();

@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
 //            adapter.notifyDataSetChanged();
 
         }else {
-            Toast.makeText(this, "No UUID", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(this, "No UUID", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -241,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
-        adapter.stopListening();
+       // adapter.stopListening();
     }
 
 
