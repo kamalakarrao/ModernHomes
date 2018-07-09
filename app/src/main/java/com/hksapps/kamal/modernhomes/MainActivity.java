@@ -14,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -132,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
 //            adapter.notifyDataSetChanged();
 
         }else {
-            Toast.makeText(this, "No UUID", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(this, "No UUID", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -241,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
-        adapter.stopListening();
+       // adapter.stopListening();
     }
 
 
