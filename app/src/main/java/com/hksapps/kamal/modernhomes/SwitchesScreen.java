@@ -1,16 +1,25 @@
 package com.hksapps.kamal.modernhomes;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -20,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.hksapps.kamal.modernhomes.models.Switch;
+import com.squareup.picasso.Picasso;
 
 public class SwitchesScreen extends AppCompatActivity {
 
@@ -45,7 +55,6 @@ public class SwitchesScreen extends AppCompatActivity {
         SwitchRecyclerView.setLayoutManager(mLayoutManager);
 
 
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,13 +66,13 @@ public class SwitchesScreen extends AppCompatActivity {
     }
 
 
-    private void LoadDataToRecyclerView(){
+    private void LoadDataToRecyclerView() {
 
 
-        if(FirebaseAuth.getInstance().getUid()!=null&&room_id!=null&&room_id.length()>0){
-           // Toast.makeText(this, "UUID Exist!", Toast.LENGTH_SHORT).show();
+        if (FirebaseAuth.getInstance().getUid() != null && room_id != null && room_id.length() > 0) {
+            // Toast.makeText(this, "UUID Exist!", Toast.LENGTH_SHORT).show();
 
-           ;
+            ;
             Query query = FirebaseDatabase.getInstance()
                     .getReference()
                     .child("Devices").child(room_id).child("switches");
@@ -92,23 +101,33 @@ public class SwitchesScreen extends AppCompatActivity {
 //                    Toast.makeText(MainActivity.this, "Arrived" +model.getRoom_id()+" "+model.getRoom_name(), Toast.LENGTH_SHORT).show();
                     //holder.room_id.setText(model.getRoom_id());
 
-                 holder.switch_name.setText(model.getName());
+                    holder.switch_name.setText(model.getName());
+                    try {
+                        if (model.getSwitch_img().length() > 0 && model.getSwitch_img() != null) {
 
-                 if(model.getStatus().equals("on")){
+                            Picasso.get().load(model.getSwitch_img()).into(holder.switch_img);
 
-                     holder.switch_status.setChecked(true);
-                 }else if (model.getStatus().equals("off")){
+                        }
+                    } catch (Exception e) {
 
-                     holder.switch_status.setChecked(false);
+                    }
 
-                 }
 
-                 holder.switch_card_view.setOnLongClickListener(new View.OnLongClickListener() {
-                     @Override
-                     public boolean onLongClick(View view) {
-                         return false;
-                     }
-                 });
+                    if (model.getStatus().equals("on")) {
+
+                        holder.switch_status.setChecked(true);
+                    } else if (model.getStatus().equals("off")) {
+
+                        holder.switch_status.setChecked(false);
+
+                    }
+
+                    holder.switch_card_view.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            return false;
+                        }
+                    });
 
 
                     holder.switch_card_view.setOnClickListener(new View.OnClickListener() {
@@ -117,22 +136,35 @@ public class SwitchesScreen extends AppCompatActivity {
 
                             DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Devices").child(room_id).child("switches");
 
-                            if(model.getStatus().equals("on")){
+                            if (model.getStatus().equals("on")) {
 
-                            ref.child("switch"+String.valueOf(position+1)).child("status").setValue("off");
+                                ref.child("switch" + String.valueOf(position + 1)).child("status").setValue("off");
 
-                            }else if (model.getStatus().equals("off")){
+                            } else if (model.getStatus().equals("off")) {
 
-                                ref.child("switch"+String.valueOf(position+1)).child("status").setValue("on");
+                                ref.child("switch" + String.valueOf(position + 1)).child("status").setValue("on");
                             }
                         }
                     });
 
 
+                    holder.switch_card_view.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+
+                            Vibrator vibrator = (Vibrator)getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrator.vibrate(50);
+
+                            String switch_number = "switch"+String.valueOf(position + 1);
+
+                            customAlertDialog(switch_number);
+
+                            return false;
+                        }
+                    });
                     // Bind the Chat object to the ChatHolder
                     // ...
                 }
-
 
 
             };
@@ -142,7 +174,7 @@ public class SwitchesScreen extends AppCompatActivity {
 
 //            adapter.notifyDataSetChanged();
 
-        }else {
+        } else {
             Toast.makeText(this, "No Room Id", Toast.LENGTH_SHORT).show();
         }
     }
@@ -153,6 +185,7 @@ public class SwitchesScreen extends AppCompatActivity {
         LoadDataToRecyclerView();
 
     }
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -160,5 +193,96 @@ public class SwitchesScreen extends AppCompatActivity {
 
         adapter.stopListening();
     }
+
+
+
+
+
+
+
+
+
+
+    private  void customAlertDialog(final String switch_no){
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        LinearLayout layout = new LinearLayout(this);
+        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setLayoutParams(parms);
+
+        layout.setGravity(Gravity.CLIP_VERTICAL);
+        layout.setPadding(10, 2, 10, 2);
+
+        TextView tv = new TextView(this);
+        tv.setText("Enter the name of device");
+        tv.setPadding(40, 40, 40, 40);
+        tv.setGravity(Gravity.CENTER);
+        tv.setTextSize(20);
+
+        final EditText et = new EditText(this);
+
+        final String etStr = et.getText().toString();
+        final TextView tv1 = new TextView(this);
+        tv1.setText("Light");
+        tv1.setPadding(10, 10, 10, 10);
+        tv1.setTextSize(20);
+
+        tv1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                et.setText(tv1.getText());
+
+            }
+        });
+
+        LinearLayout.LayoutParams tv1Params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        tv1Params.bottomMargin = 5;
+/*        tv1Params.leftMargin = 10;
+        tv1Params.rightMargin = 10;*/
+        layout.addView(tv1,tv1Params);
+        layout.addView(et, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        alertDialogBuilder.setView(layout);
+        alertDialogBuilder.setTitle("Enter the name of the device");
+        // alertDialogBuilder.setMessage("Input Student ID");
+        alertDialogBuilder.setCustomTitle(tv);
+
+
+        // alertDialogBuilder.setMessage(message);
+        alertDialogBuilder.setCancelable(false);
+
+        // Setting Negative "Cancel" Button
+        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.cancel();
+            }
+        });
+
+        // Setting Positive "OK" Button
+        alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+
+          DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Devices").child(room_id).child("switches");
+           ref.child(switch_no).child("name").setValue(et.getText().toString());
+
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        try {
+            alertDialog.show();
+        } catch (Exception e) {
+            // WindowManager$BadTokenException will be caught and the app would
+            // not display the 'Force Close' message
+            e.printStackTrace();
+        }
+
+    }
+
+
 
 }
