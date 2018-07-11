@@ -2,11 +2,11 @@
     <string name="app_name">Modern Homes</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_rooms">RoomsActivity</string>
-    <string name="title_activity_scanner">ScannerActivity</string>
+    <string name="title_activity_scanner">Scanner</string>
     <string-array name="cat">
         <item>Fan</item>
         <item>light</item>
         <item>tube</item>
     </string-array>
-    <string name="title_activity_switches_screen">SwitchesScreen</string>
+    <string name="title_activity_switches_screen">Switches</string>
 </resources>
