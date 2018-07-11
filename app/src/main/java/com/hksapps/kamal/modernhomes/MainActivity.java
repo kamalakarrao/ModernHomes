@@ -1,8 +1,10 @@
 package com.hksapps.kamal.modernhomes;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
@@ -18,6 +20,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -25,9 +30,12 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.hksapps.kamal.modernhomes.models.Room;
 import com.squareup.picasso.Picasso;
 
@@ -39,13 +47,26 @@ public class MainActivity extends AppCompatActivity {
     private boolean signed_in_cancelled = false;
     private RecyclerView RoomRecyclerView;
     FirebaseRecyclerAdapter<Room, RoomHolder> adapter;
-
+    LinearLayout ll_empty;
+    ProgressDialog dialog;
+    private TextView text_notice;
+    private  Button add_room;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+
+         ll_empty = (LinearLayout) findViewById(R.id.ll_empty);
+         add_room = (Button) findViewById(R.id.add_room);
+
+        text_notice = (TextView) findViewById(R.id.text_notice);
+
+         dialog = new ProgressDialog(this);
+
 
         FirebaseAuthenticationProcess();
 
@@ -67,13 +88,51 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+        add_room.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(MainActivity.this,ScannerActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void LoadDataToRecyclerView(){
 
-
         if(FirebaseAuth.getInstance().getUid()!=null){
-           //
+
+            DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getUid()).child("rooms");
+
+            ref2.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    if(dataSnapshot.exists()){
+                        RoomRecyclerView.setVisibility(View.VISIBLE);
+                        ll_empty.setVisibility(View.GONE);
+
+                    }else{
+                        RoomRecyclerView.setVisibility(View.GONE);
+                        ll_empty.setVisibility(View.VISIBLE);
+                        add_room.setVisibility(View.VISIBLE);
+                        text_notice.setText("You haven't added any rooms yet");
+
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(MainActivity.this, "Cancelled ", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+
+            //
             // Toast.makeText(this, "UUID Exist!", Toast.LENGTH_SHORT).show();
 
             Log.e("uuid",FirebaseAuth.getInstance().getUid());
@@ -129,11 +188,25 @@ public class MainActivity extends AppCompatActivity {
                         public void onClick(View view) {
                           //  Toast.makeText(MainActivity.this, model.getRoom_id(), Toast.LENGTH_SHORT).show();
 
+                            if(isNetworkConnected()) {
+                                RoomRecyclerView.setVisibility(View.VISIBLE);
+                                ll_empty.setVisibility(View.GONE);
+
+                                Intent intent = new Intent(MainActivity.this, SwitchesScreen.class);
+                                intent.putExtra("room_id", model.getRoom_id());
+                                startActivity(intent);
+
+                                // Toast.makeText(this, "No UUID", Toast.LENGTH_SHORT).show();
+                            }else {
+
+                                RoomRecyclerView.setVisibility(View.GONE);
+                                ll_empty.setVisibility(View.VISIBLE);
+                                text_notice.setText("Check your Internet Connection");
+                                add_room.setVisibility(View.GONE);
+
+                            }
 
 
-                            Intent intent = new Intent(MainActivity.this, SwitchesScreen.class);
-                            intent.putExtra("room_id", model.getRoom_id());
-                            startActivity(intent);
 
                         }
                     });
@@ -154,11 +227,28 @@ public class MainActivity extends AppCompatActivity {
 
 //            adapter.notifyDataSetChanged();
 
-        }else {
+        }
+        if(isNetworkConnected()) {
+            RoomRecyclerView.setVisibility(View.VISIBLE);
+            ll_empty.setVisibility(View.GONE);
+
+
+
            // Toast.makeText(this, "No UUID", Toast.LENGTH_SHORT).show();
+        }else {
+
+            RoomRecyclerView.setVisibility(View.GONE);
+            ll_empty.setVisibility(View.VISIBLE);
+            text_notice.setText("Check your Internet Connection");
+            add_room.setVisibility(View.GONE);
+
         }
     }
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        return cm.getActiveNetworkInfo() != null;
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -317,6 +407,8 @@ public class MainActivity extends AppCompatActivity {
               //  Toast.makeText(MainActivity.this, "Inside FirebaseAuth", Toast.LENGTH_SHORT).show();
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
+                    dialog.setMessage("Please wait");
+                    dialog.show();
                     //Load LoginScreen
                    // finish();
                   // Intent i = new Intent(MainActivity.this,MainActivity.class);
@@ -324,6 +416,10 @@ public class MainActivity extends AppCompatActivity {
                     DatabaseReference database =  FirebaseDatabase.getInstance().getReference();
                    database.child("Users").child(user.getUid()).child("user_id").setValue(user.getUid());
                    database.child("Users").child(user.getUid()).child("email_id").setValue(user.getEmail());
+
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
 
                   //  Toast.makeText(MainActivity.this, "Hello "+user.getDisplayName(), Toast.LENGTH_SHORT).show();
                 }else {
