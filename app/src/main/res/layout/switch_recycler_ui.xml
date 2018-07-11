@@ -24,13 +24,15 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
+            <TextView
                 android:id="@+id/switch_img"
                 android:layout_width="match_parent"
-                android:src="@drawable/light"
                 android:layout_height="@dimen/cover_height"
+                android:gravity="center"
+                android:fontFamily="cursive"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:scaleType="centerCrop" />
+                android:text="H"
+                android:textSize="100dp"/>
 
 
         <LinearLayout

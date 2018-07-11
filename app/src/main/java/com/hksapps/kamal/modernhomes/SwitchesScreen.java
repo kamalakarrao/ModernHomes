@@ -2,7 +2,6 @@ package com.hksapps.kamal.modernhomes;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
@@ -29,7 +28,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.hksapps.kamal.modernhomes.models.Switch;
-import com.squareup.picasso.Picasso;
 
 public class SwitchesScreen extends AppCompatActivity {
 
@@ -59,10 +57,12 @@ public class SwitchesScreen extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Have a Great day!", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
+
+        fab.setVisibility(View.GONE);
     }
 
 
@@ -102,7 +102,8 @@ public class SwitchesScreen extends AppCompatActivity {
                     //holder.room_id.setText(model.getRoom_id());
 
                     holder.switch_name.setText(model.getName());
-                    try {
+                    holder.switch_img.setText(model.getName().substring(0,1));
+                    /*try {
                         if (model.getSwitch_img().length() > 0 && model.getSwitch_img() != null) {
 
                             Picasso.get().load(model.getSwitch_img()).into(holder.switch_img);
@@ -110,7 +111,7 @@ public class SwitchesScreen extends AppCompatActivity {
                         }
                     } catch (Exception e) {
 
-                    }
+                    }*/
 
 
                     if (model.getStatus().equals("on")) {

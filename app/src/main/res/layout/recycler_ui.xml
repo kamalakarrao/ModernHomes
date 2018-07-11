@@ -23,13 +23,15 @@
             android:orientation="vertical"
             android:layout_height="match_parent">
 
-            <ImageView
+            <TextView
                 android:id="@+id/room_img"
                 android:layout_width="match_parent"
-                android:src="@drawable/hksapps"
                 android:layout_height="@dimen/cover_height"
+                android:gravity="center"
+                android:fontFamily="cursive"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:scaleType="centerCrop" />
+                android:text="H"
+                android:textSize="100dp"/>
 
             <TextView
                 android:id="@+id/room_name"

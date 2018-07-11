@@ -1,9 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
+    android:layout_margin="20dp"
+    android:orientation="vertical"
     tools:context=".WifiActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:text="1.Connect to wifi - Hksapps with password - 5D75F25G0"
+         />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:text="2.After Connecting Click below button and connect your device to your wifi network"
+
+  />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_margin="20dp"
+        android:text="Configure Device"
+        android:id="@+id/wifi_config"
+        android:textColor="#ffffff"
+        android:background="@drawable/curevedrectangle"
+        android:layout_height="wrap_content" />
+</LinearLayout>

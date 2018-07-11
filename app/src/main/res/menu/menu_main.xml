@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.hksapps.kamal.modernhomes.MainActivity">
     <item
+        android:id="@+id/configure_device"
+        android:orderInCategory="100"
+        android:title="Configure Device"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/log_out"
         android:orderInCategory="100"
         android:title="Log out"

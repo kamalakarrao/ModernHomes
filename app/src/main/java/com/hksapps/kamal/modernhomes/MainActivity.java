@@ -37,7 +37,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.hksapps.kamal.modernhomes.models.Room;
-import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
     private boolean signed_in_cancelled = false;
     private RecyclerView RoomRecyclerView;
+
     FirebaseRecyclerAdapter<Room, RoomHolder> adapter;
     LinearLayout ll_empty;
     ProgressDialog dialog;
@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
         text_notice = (TextView) findViewById(R.id.text_notice);
 
          dialog = new ProgressDialog(this);
+
+
 
 
         FirebaseAuthenticationProcess();
@@ -165,11 +167,12 @@ public class MainActivity extends AppCompatActivity {
                     //holder.room_id.setText(model.getRoom_id());
                     holder.room_name.setText(model.getRoom_name());
 
+                    holder.room_img.setText(model.getRoom_name().substring(0,1));
 
-                    if(model.getRoom_img().length()>5)
+                    /*if(model.getRoom_img().length()>5)
                         Picasso.get().load(model.getRoom_img()).into(holder.room_img);
                     else
-                        holder.room_img.setImageResource(R.drawable.light);
+                        holder.room_img.setImageResource(R.drawable.light);*/
 
                     holder.card_view.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
@@ -272,7 +275,12 @@ public class MainActivity extends AppCompatActivity {
                     .signOut(MainActivity.this);
             return true;
         }
+        if (id == R.id.configure_device) {
 
+startActivity(new Intent(MainActivity.this,WifiActivity.class));
+
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
