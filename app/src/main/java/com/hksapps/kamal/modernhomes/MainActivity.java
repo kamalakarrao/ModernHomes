@@ -23,7 +23,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -129,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Toast.makeText(MainActivity.this, "Cancelled ", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(MainActivity.this, "Cancelled ", Toast.LENGTH_SHORT).show();
 
                 }
             });
