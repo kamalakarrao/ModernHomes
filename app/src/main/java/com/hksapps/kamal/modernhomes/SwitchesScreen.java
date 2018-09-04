@@ -2,6 +2,7 @@ package com.hksapps.kamal.modernhomes;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
@@ -113,13 +114,35 @@ public class SwitchesScreen extends AppCompatActivity {
 
                     }*/
 
+                    if (model.getStatus().equals("off")||model.getStatus().equals("on")) {
+                        Toast.makeText(SwitchesScreen.this, "Processing", Toast.LENGTH_SHORT).show();
 
-                    if (model.getStatus().equals("on")) {
+                        holder.switch_card_view.setCardBackgroundColor(Color.parseColor("#cbcbcc"));
+                    }
+                    if (model.getStatus().equals("on_confirmed")) {
+
+
+                        holder.switch_card_view.setCardBackgroundColor(Color.parseColor("#ffffff"));
 
                         holder.switch_status.setChecked(true);
-                    } else if (model.getStatus().equals("off")) {
+
+                    } if (model.getStatus().equals("off_confirmed")) {
+
+                        holder.switch_card_view.setCardBackgroundColor(Color.parseColor("#ffffff"));
 
                         holder.switch_status.setChecked(false);
+
+                    }
+                    Log.e(model.getName(),"status :"+model.getStatus()+", physical status:"+model.getPhysical_status());
+                    //physical status can have either ON or OFF
+                    //status can have no or off or off_confirmed or on_confirmed
+                        if (model.getStatus().equals(model.getPhysical_status())) {
+//                        if (model.getStatus().startsWith(model.getPhysical_status())) {
+                            holder.switch_status.setChecked(false);
+
+                        }else {
+                            holder.switch_status.setChecked(true);
+
 
                     }
 
@@ -137,11 +160,11 @@ public class SwitchesScreen extends AppCompatActivity {
 
                             DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Devices").child(room_id).child("switches");
 
-                            if (model.getStatus().equals("on")) {
+                            if (model.getStatus().equals("on_confirmed")) {
 
                                 ref.child("switch" + String.valueOf(position + 1)).child("status").setValue("off");
 
-                            } else if (model.getStatus().equals("off")) {
+                            } else if (model.getStatus().equals("off_confirmed")) {
 
                                 ref.child("switch" + String.valueOf(position + 1)).child("status").setValue("on");
                             }
