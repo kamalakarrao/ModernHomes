@@ -3,6 +3,7 @@ package com.hksapps.kamal.modernhomes;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
@@ -168,6 +169,30 @@ public class SwitchesScreen extends AppCompatActivity {
 
                                 ref.child("switch" + String.valueOf(position + 1)).child("status").setValue("on");
                             }
+
+                            AsyncTask.execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //TODO your background code
+                                    try{
+                                        Thread.sleep(3000);
+                                        DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference().child("Devices").child(room_id).child("switches");
+                                        Log.e("Inside Asynctask"+model.getName(),"status :"+model.getStatus()+", physical status:"+model.getPhysical_status());
+                                        if (model.getStatus().equals("on")){
+
+                                            ref2.child("switch" + String.valueOf(position + 1)).child("status").setValue("off_confirmed");
+
+                                        }else if(model.getStatus().equals("off")) {
+                                            ref2.child("switch" + String.valueOf(position + 1)).child("status").setValue("on_confirmed");
+
+                                        }
+
+                                    }catch (Exception e){
+
+                                        Toast.makeText(SwitchesScreen.this, "Exception", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                         }
                     });
 
