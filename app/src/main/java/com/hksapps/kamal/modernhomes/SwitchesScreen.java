@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -26,9 +27,12 @@ import android.widget.Toast;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.hksapps.kamal.modernhomes.models.Switch;
 
 public class SwitchesScreen extends AppCompatActivity {
@@ -116,7 +120,7 @@ public class SwitchesScreen extends AppCompatActivity {
                     }*/
 
                     if (model.getStatus().equals("off")||model.getStatus().equals("on")) {
-                        Toast.makeText(SwitchesScreen.this, "Processing", Toast.LENGTH_SHORT).show();
+                      //  Toast.makeText(SwitchesScreen.this, "Processing", Toast.LENGTH_SHORT).show();
 
                         holder.switch_card_view.setCardBackgroundColor(Color.parseColor("#cbcbcc"));
                     }
@@ -170,29 +174,48 @@ public class SwitchesScreen extends AppCompatActivity {
                                 ref.child("switch" + String.valueOf(position + 1)).child("status").setValue("on");
                             }
 
-                            AsyncTask.execute(new Runnable() {
+                            new AsyncTask<Void,Void,Void>(){
+
                                 @Override
-                                public void run() {
-                                    //TODO your background code
-                                    try{
-                                        Thread.sleep(3000);
+                                protected Void doInBackground(Void... voids) {
+                                    try {
+                                        Thread.sleep(5000);
+
                                         DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference().child("Devices").child(room_id).child("switches");
-                                        Log.e("Inside Asynctask"+model.getName(),"status :"+model.getStatus()+", physical status:"+model.getPhysical_status());
-                                        if (model.getStatus().equals("on")){
+                                       // Log.e("Inside Asynctask"+model.getName(),"status :"+model.getStatus()+", physical status:"+model.getPhysical_status());
 
-                                            ref2.child("switch" + String.valueOf(position + 1)).child("status").setValue("off_confirmed");
+                                        ref2.child("switch" + String.valueOf(position + 1)).child("status").addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                String status = dataSnapshot.getValue().toString();
+                                                DatabaseReference ref3 = FirebaseDatabase.getInstance().getReference().child("Devices").child(room_id).child("switches");
 
-                                        }else if(model.getStatus().equals("off")) {
-                                            ref2.child("switch" + String.valueOf(position + 1)).child("status").setValue("on_confirmed");
+                                                if (status.equals("on")){
 
-                                        }
+                                                    ref3.child("switch" + String.valueOf(position + 1)).child("status").setValue("off_confirmed");
 
-                                    }catch (Exception e){
+                                                }else if(status.equals("off")) {
+                                                    ref3.child("switch" + String.valueOf(position + 1)).child("status").setValue("on_confirmed");
 
-                                        Toast.makeText(SwitchesScreen.this, "Exception", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+
+
+
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
                                     }
+                                    return null;
                                 }
-                            });
+                            }.execute();
+
                         }
                     });
 
