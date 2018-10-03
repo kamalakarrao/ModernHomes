@@ -19,11 +19,13 @@ public class WifiActivity extends AppCompatActivity {
         wifi_config.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                String url = "http://192.168.4.1";
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
+                Intent i = new Intent(WifiActivity.this,SetupActivity.class);
                 startActivity(i);
+
+//                String url = "http://192.168.4.1";
+//                Intent i = new Intent(Intent.ACTION_VIEW);
+//                i.setData(Uri.parse(url));
+//                startActivity(i);
 
             }
         });

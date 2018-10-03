@@ -122,18 +122,21 @@ public class SwitchesScreen extends AppCompatActivity {
                     if (model.getStatus().equals("off")||model.getStatus().equals("on")) {
                       //  Toast.makeText(SwitchesScreen.this, "Processing", Toast.LENGTH_SHORT).show();
 
-                        holder.switch_card_view.setCardBackgroundColor(Color.parseColor("#cbcbcc"));
+//                        holder.switch_card_view.setCardBackgroundColor(Color.parseColor("#cbcbcc"));
+                        holder.pbHeaderProgress.setVisibility(View.VISIBLE);
                     }
                     if (model.getStatus().equals("on_confirmed")) {
 
+                        holder.pbHeaderProgress.setVisibility(View.GONE);
 
-                        holder.switch_card_view.setCardBackgroundColor(Color.parseColor("#ffffff"));
+//                        holder.switch_card_view.setCardBackgroundColor(Color.parseColor("#ffffff"));
 
                         holder.switch_status.setChecked(true);
 
                     } if (model.getStatus().equals("off_confirmed")) {
+                        holder.pbHeaderProgress.setVisibility(View.GONE);
 
-                        holder.switch_card_view.setCardBackgroundColor(Color.parseColor("#ffffff"));
+//                        holder.switch_card_view.setCardBackgroundColor(Color.parseColor("#ffffff"));
 
                         holder.switch_status.setChecked(false);
 

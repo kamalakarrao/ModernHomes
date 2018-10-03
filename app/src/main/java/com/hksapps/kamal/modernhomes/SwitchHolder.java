@@ -3,6 +3,7 @@ package com.hksapps.kamal.modernhomes;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -12,6 +13,7 @@ public class SwitchHolder extends RecyclerView.ViewHolder {
    public Switch switch_status;
    public CardView switch_card_view;
    public TextView switch_img;
+   public ProgressBar pbHeaderProgress;
     public SwitchHolder(View itemView) {
         super(itemView);
 
@@ -19,6 +21,8 @@ public class SwitchHolder extends RecyclerView.ViewHolder {
         switch_status  = (Switch) itemView.findViewById(R.id.switch_toggle);
         switch_card_view = (CardView) itemView.findViewById(R.id.switch_card_view);
         switch_img = (TextView) itemView.findViewById(R.id.switch_img);
+        pbHeaderProgress = (ProgressBar) itemView.findViewById(R.id.pbHeaderProgress);
+        pbHeaderProgress.setVisibility(View.GONE);
 
 
     }

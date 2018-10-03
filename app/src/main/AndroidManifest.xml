@@ -31,7 +31,8 @@
             android:name=".SwitchesScreen"
             android:label="@string/title_activity_switches_screen"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".WifiActivity"></activity>
+        <activity android:name=".WifiActivity" />
+        <activity android:name=".SetupActivity"></activity>
     </application>
 
 </manifest>
