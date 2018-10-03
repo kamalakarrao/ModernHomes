@@ -13,6 +13,10 @@ public class Room {
         this.room_img = img_url;
     }
 
+    public Room(String room_id) {
+        this.room_id = room_id;
+    }
+
     public Room(){
 
     }
